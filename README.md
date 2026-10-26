@@ -4,6 +4,5 @@ A responsive calculator that compares estimated travel times at your current spe
 
 ## Deployment
 
-The Vercel project is configured and connected to this GitHub repository: [speed-comparison on Vercel](https://vercel.com/sarang-dev/speed-comparison).
-
-The initial production deployment is still pending. Once it succeeds, add the public deployment URL here.
+- **Live app:** [speed-comparison-sarang-dev.vercel.app](https://speed-comparison-sarang-dev.vercel.app)
+- **Vercel project:** [speed-comparison](https://vercel.com/sarang-dev/speed-comparison)

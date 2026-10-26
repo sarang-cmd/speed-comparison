@@ -6,3 +6,4 @@ A responsive calculator that compares estimated travel times at your current spe
 
 - **Live app:** [speed-comparison-sarang-dev.vercel.app](https://speed-comparison-sarang-dev.vercel.app)
 - **Vercel project:** [speed-comparison](https://vercel.com/sarang-dev/speed-comparison)
+- **Requested domain:** `speed-comparison.vercel.app` is unavailable because it is already assigned to another Vercel project.

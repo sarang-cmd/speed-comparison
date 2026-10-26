@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f5f4ef" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>Speedwise — Your time, reclaimed</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
@@ -55,6 +56,31 @@
     .hero-result .unit-large { color:#b9c1ba; font:500 14px Manrope,sans-serif; padding-bottom:7px; line-height:1.25; }
     .hero-result .unit-large strong { display:block; color:#fff; font-size:16px; font-weight:600; }
     .result-subtitle { color:#96a098; font-size:12px; margin-top:11px; }
+    .road-viz { margin-top:22px; padding:14px 14px 12px; border:1px solid rgba(255,255,255,.11); border-radius:14px; background:radial-gradient(ellipse at 50% 18%,rgba(142,192,93,.15),transparent 55%),linear-gradient(160deg,#202d27,#18211d 68%); overflow:hidden; }
+    .viz-head { display:flex; justify-content:space-between; align-items:center; color:#89988d; font:9px 'DM Mono',monospace; letter-spacing:.7px; text-transform:uppercase; }
+    .viz-live { display:flex; align-items:center; gap:6px; color:#bddc9d; font-size:9px; }
+    .viz-live i { display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--green); box-shadow:0 0 9px var(--green); }
+    .road-svg { display:block; width:100%; height:auto; margin:3px auto 0; overflow:visible; filter:drop-shadow(0 12px 16px rgba(0,0,0,.2)); }
+    .road-surface { fill:url(#roadSurface); stroke:rgba(219,243,203,.18); stroke-width:1; }
+    .road-grid { fill:none; stroke:rgba(206,232,193,.12); stroke-width:1; }
+    .road-divider { fill:none; stroke:rgba(235,245,228,.52); stroke-width:2; stroke-dasharray:8 10; stroke-linecap:round; }
+    .road-edge { fill:none; stroke:rgba(194,232,162,.56); stroke-width:1.5; }
+    .car-shadow { fill:rgba(0,0,0,.35); }
+    .car-body { stroke:rgba(255,255,255,.72); stroke-width:1; }
+    .car-window { fill:#23352b; stroke:rgba(255,255,255,.22); stroke-width:.7; }
+    .car-wheel { fill:#101713; }
+    .car-current .car-body { fill:#e8eee4; }
+    .car-faster .car-body { fill:#b8f36b; stroke:#d7ffad; }
+    .car-glow { fill:none; stroke-width:2; opacity:.35; }
+    .car-current .car-glow { stroke:#e8eee4; }
+    .car-faster .car-glow { stroke:#b8f36b; }
+    .road-legend { display:flex; justify-content:space-between; gap:12px; border-top:1px solid rgba(255,255,255,.09); padding-top:10px; margin-top:-2px; }
+    .road-key { min-width:0; display:flex; align-items:center; gap:7px; color:#a0aaa1; font:9px 'DM Mono',monospace; }
+    .road-key b { color:#f2f5ef; font-weight:500; }
+    .road-key.faster b { color:#c7f29f; }
+    .key-dot { width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:#e8eee4; box-shadow:0 0 7px rgba(232,238,228,.65); }
+    .road-key.faster .key-dot { background:var(--green); box-shadow:0 0 8px rgba(184,243,107,.8); }
+    .viz-gain { color:#c7ed9e; font:9px 'DM Mono',monospace; white-space:nowrap; }
     .compare { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:22px 0 18px; }
     .time-card { border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.035); border-radius:12px; padding:14px 15px; }
     .time-card.faster { border-color:rgba(184,243,107,.33); background:rgba(184,243,107,.07); }
@@ -109,6 +135,49 @@
           <div class="panel-heading"><h2>Your time saved</h2><span class="live"><i></i> LIVE ESTIMATE</span></div>
           <div class="hero-result"><div class="number" id="saved-number">18</div><div class="unit-large"><strong id="saved-unit">minutes</strong>sooner to arrive</div></div>
           <div class="result-subtitle" id="result-subtitle">That’s 15% less time on the road.</div>
+          <div class="road-viz">
+            <div class="viz-head"><span>Same moment on the road</span><span class="viz-live"><i></i> 3D route view</span></div>
+            <svg class="road-svg" viewBox="0 0 560 210" role="img" aria-labelledby="road-title road-desc">
+              <title id="road-title">3D speed comparison road</title>
+              <desc id="road-desc">A perspective road showing the current-speed vehicle and faster vehicle at the same elapsed time.</desc>
+              <defs>
+                <linearGradient id="roadSurface" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#46564b"/><stop offset="1" stop-color="#202a24"/></linearGradient>
+                <linearGradient id="roadGlow" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b8f36b" stop-opacity=".24"/><stop offset="1" stop-color="#b8f36b" stop-opacity="0"/></linearGradient>
+                <radialGradient id="horizonGlow"><stop stop-color="#c0f485" stop-opacity=".5"/><stop offset="1" stop-color="#c0f485" stop-opacity="0"/></radialGradient>
+              </defs>
+              <ellipse cx="280" cy="25" rx="132" ry="38" fill="url(#horizonGlow)"/>
+              <path class="road-surface" d="M228 28 L332 28 L553 197 L7 197 Z"/>
+              <path d="M280 28 L7 197 L553 197 Z" fill="url(#roadGlow)" opacity=".14"/>
+              <path class="road-edge" d="M228 28 L7 197 M332 28 L553 197"/>
+              <path class="road-divider" d="M280 30 L280 197"/>
+              <path class="road-grid" d="M228 28 L7 197 M254 28 L166 197 M306 28 L394 197 M332 28 L553 197"/>
+              <path class="road-grid" d="M216 39 L344 39 M190 60 L370 60 M160 84 L400 84 M126 110 L434 110 M91 138 L469 138 M45 173 L515 173"/>
+              <path d="M262 45 L255 50 M298 45 L305 50" stroke="#e7f1df" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+              <g id="current-car" class="car-current" transform="translate(0 0) scale(.7)">
+                <ellipse class="car-shadow" cx="0" cy="3" rx="15" ry="23"/>
+                <ellipse class="car-glow" cx="0" cy="0" rx="22" ry="31"/>
+                <path class="car-body" d="M-10 15 L-13 7 L-12 -12 Q-11 -18 -7 -20 L7 -20 Q11 -18 12 -12 L13 7 L10 15 Q0 19 -10 15 Z"/>
+                <path class="car-window" d="M-8 -8 Q-7 -15 -4 -16 L4 -16 Q7 -15 8 -8 L7 -3 L-7 -3 Z"/>
+                <path class="car-window" d="M-7 1 L7 1 L8 8 Q0 11 -8 8 Z"/>
+                <rect class="car-wheel" x="-14" y="-12" width="3" height="8" rx="1"/><rect class="car-wheel" x="11" y="-12" width="3" height="8" rx="1"/>
+                <rect class="car-wheel" x="-14" y="7" width="3" height="7" rx="1"/><rect class="car-wheel" x="11" y="7" width="3" height="7" rx="1"/>
+              </g>
+              <g id="faster-car" class="car-faster" transform="translate(0 0) scale(.7)">
+                <ellipse class="car-shadow" cx="0" cy="3" rx="15" ry="23"/>
+                <ellipse class="car-glow" cx="0" cy="0" rx="22" ry="31"/>
+                <path class="car-body" d="M-10 15 L-13 7 L-12 -12 Q-11 -18 -7 -20 L7 -20 Q11 -18 12 -12 L13 7 L10 15 Q0 19 -10 15 Z"/>
+                <path class="car-window" d="M-8 -8 Q-7 -15 -4 -16 L4 -16 Q7 -15 8 -8 L7 -3 L-7 -3 Z"/>
+                <path class="car-window" d="M-7 1 L7 1 L8 8 Q0 11 -8 8 Z"/>
+                <rect class="car-wheel" x="-14" y="-12" width="3" height="8" rx="1"/><rect class="car-wheel" x="11" y="-12" width="3" height="8" rx="1"/>
+                <rect class="car-wheel" x="-14" y="7" width="3" height="7" rx="1"/><rect class="car-wheel" x="11" y="7" width="3" height="7" rx="1"/>
+              </g>
+            </svg>
+            <div class="road-legend">
+              <span class="road-key"><i class="key-dot"></i><span>Current · <b id="viz-base-speed">80 km/h</b></span></span>
+              <span class="viz-gain" id="viz-gain">+25% farther</span>
+              <span class="road-key faster"><i class="key-dot"></i><span>Faster · <b id="viz-fast-speed">100 km/h</b></span></span>
+            </div>
+          </div>
           <div class="compare">
             <div class="time-card"><div class="time-label">● &nbsp;At <span id="base-speed-label">80 km/h</span></div><div class="time-value" id="base-time">1h 30m</div><div class="time-detail">estimated travel time</div></div>
             <div class="time-card faster"><div class="time-label">↗ &nbsp;At <span id="new-speed-label">100 km/h</span></div><div class="time-value" id="new-time">1h 12m</div><div class="time-detail">estimated travel time</div></div>
@@ -157,6 +226,21 @@
       document.getElementById('saved-chip').textContent = `−${duration(savedMins / 60)}`;
       document.getElementById('distance-label').textContent = `${fmt(distance)} ${unit}`;
       document.getElementById('track-fill').style.width = `${Math.max(3, Math.min(100, pct))}%`;
+      document.getElementById('viz-base-speed').textContent = `${fmt(speed)} ${unit}/h`;
+      document.getElementById('viz-fast-speed').textContent = `${fmt(fasterSpeed)} ${unit}/h`;
+      const gain = speed ? Math.round((fasterSpeed / speed - 1) * 100) : 0;
+      document.getElementById('viz-gain').textContent = speed ? `+${gain}% farther` : 'Set a speed to compare';
+      const currentProgress = .48;
+      const fasterProgress = speed ? Math.min(.94, currentProgress * fasterSpeed / speed) : currentProgress;
+      const placeCar = (id, progress, lane) => {
+        const x = lane === 'current' ? 260 - 125 * progress : 300 + 125 * progress;
+        const y = 30 + 165 * progress;
+        const scale = .55 + .45 * progress;
+        document.getElementById(id).setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
+      };
+      placeCar('current-car', currentProgress, 'current');
+      placeCar('faster-car', fasterProgress, 'faster');
+      document.getElementById('road-desc').textContent = `Perspective road comparison at the same elapsed time: current speed ${fmt(speed)} kilometers per hour, faster speed ${fmt(fasterSpeed)} kilometers per hour.`;
     }
     [distanceInput, speedInput, increaseInput].forEach(input => input.addEventListener('input', render));
     render();

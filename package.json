@@ -1,0 +1,19 @@
+{
+  "name": "speed-comparison",
+  "version": "1.0.0",
+  "description": "A responsive calculator that compares estimated travel times at your current speed and an increased speed",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "speed",
+    "comparison",
+    "calculator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.12"
+  }
+}

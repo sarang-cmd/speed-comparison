@@ -3,103 +3,188 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f5f4ef" />
+  <meta name="theme-color" content="#f3f3ee" />
+  <meta name="description" content="Compare trip times, arrival estimates, and the minutes a speed increase could save with Speedwise." />
+  <link rel="canonical" href="https://speed-wise.vercel.app/" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>Speedwise — Your time, reclaimed</title>
+  <title>Speedwise | Trip time, made clear</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
-    :root { --paper:#f5f4ef; --ink:#17211d; --muted:#78817b; --line:#e3e5de; --green:#b8f36b; --green-deep:#416c1a; --card:#fff; --night:#17211d; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--paper); color:var(--ink); font-family:'DM Sans', sans-serif; -webkit-font-smoothing:antialiased; }
-    button,input { font:inherit; }
-    .shell { min-height:100vh; display:flex; flex-direction:column; }
-    .topbar { width:min(1120px, calc(100% - 56px)); margin:0 auto; height:82px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(23,33,29,.1); }
-    .brand { display:flex; align-items:center; gap:10px; font:800 18px Manrope,sans-serif; letter-spacing:-.7px; }
-    .brand-mark { width:28px; height:28px; display:grid; place-items:center; background:var(--green); border-radius:9px; }
-    .brand-mark svg { width:16px; height:16px; }
-    .top-note { color:#6f7771; font:500 11px 'DM Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
-    main { width:min(1120px, calc(100% - 56px)); margin:0 auto; padding:76px 0 64px; flex:1; }
-    .intro { text-align:center; max-width:640px; margin:0 auto 48px; }
-    .eyebrow { color:#638d31; font:500 11px 'DM Mono',monospace; letter-spacing:1.4px; text-transform:uppercase; display:flex; gap:8px; justify-content:center; align-items:center; margin-bottom:17px; }
-    .eyebrow:before { content:''; width:18px; height:1px; background:#83b54d; }
-    h1 { font:600 clamp(38px,5.6vw,62px)/1.08 Manrope,sans-serif; letter-spacing:-3.2px; margin:0; }
-    h1 span { color:#849083; }
-    .intro p { max-width:450px; margin:18px auto 0; color:#737b75; font-size:15px; line-height:1.65; }
-    .workspace { display:grid; grid-template-columns: minmax(300px, .9fr) minmax(390px, 1.1fr); gap:20px; align-items:stretch; }
-    .panel { border:1px solid var(--line); border-radius:20px; background:var(--card); }
-    .form-panel { padding:29px 30px 25px; }
-    .panel-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
-    .panel-heading h2 { font:700 15px Manrope,sans-serif; letter-spacing:-.3px; margin:0; }
-    .step { color:#99a19b; font:11px 'DM Mono',monospace; }
-    .field { margin-bottom:22px; }
-    .label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
-    label { font-size:12px; font-weight:600; color:#414a44; }
-    .hint { color:#9aa19c; font:10px 'DM Mono',monospace; }
-    .input-wrap { height:56px; display:flex; align-items:center; border:1px solid #dfe2dc; border-radius:11px; padding:0 15px; transition:.2s; background:#fff; }
-    .input-wrap:focus-within { border-color:#8dbb56; box-shadow:0 0 0 3px rgba(184,243,107,.23); }
-    .input-wrap input { min-width:0; width:100%; border:0; outline:0; color:var(--ink); font:600 18px Manrope,sans-serif; background:transparent; }
-    .unit { color:#8d958f; font:11px 'DM Mono',monospace; white-space:nowrap; margin-left:10px; }
-    .increase-wrap { border-color:#cce2b5; background:#fbfef7; }
-    .increase-wrap input { color:#4b791f; }
-    .increment { display:flex; align-items:center; gap:7px; color:#5a8a2b; font-size:11px; font-weight:700; white-space:nowrap; }
-    .plus { width:19px; height:19px; display:grid; place-items:center; border-radius:50%; background:var(--green); color:#365817; font:600 14px Manrope,sans-serif; }
-    .bottom-line { border-top:1px solid #eef0eb; padding-top:16px; margin-top:2px; display:flex; justify-content:space-between; color:#909791; font-size:11px; }
-    .bottom-line span:last-child { color:#656e68; font:11px 'DM Mono',monospace; }
-    .result-panel { background:var(--night); color:#fff; padding:30px 32px 26px; border-color:var(--night); overflow:hidden; position:relative; }
-    .result-panel:after { content:''; position:absolute; right:-90px; top:-112px; width:280px; height:280px; border:1px solid rgba(184,243,107,.09); border-radius:50%; box-shadow:0 0 0 28px rgba(184,243,107,.025),0 0 0 58px rgba(184,243,107,.025); pointer-events:none; }
-    .result-panel .panel-heading { position:relative; z-index:1; margin-bottom:25px; }
-    .result-panel .panel-heading h2 { color:#f2f5ef; }
-    .live { display:flex; align-items:center; gap:6px; color:#a9b2ab; font:10px 'DM Mono',monospace; }
-    .live i { width:6px; height:6px; border-radius:50%; background:#b8f36b; box-shadow:0 0 8px #b8f36b; }
-    .hero-result { position:relative; z-index:1; display:flex; gap:15px; align-items:flex-end; padding-bottom:25px; border-bottom:1px solid rgba(255,255,255,.13); }
-    .hero-result .number { color:var(--green); font:600 clamp(52px,6.4vw,76px)/.92 Manrope,sans-serif; letter-spacing:-5px; white-space:nowrap; }
-    .hero-result .unit-large { color:#b9c1ba; font:500 14px Manrope,sans-serif; padding-bottom:7px; line-height:1.25; }
-    .hero-result .unit-large strong { display:block; color:#fff; font-size:16px; font-weight:600; }
-    .result-subtitle { color:#96a098; font-size:12px; margin-top:11px; }
-    .road-viz { margin-top:22px; padding:14px 14px 12px; border:1px solid rgba(255,255,255,.11); border-radius:14px; background:radial-gradient(ellipse at 50% 18%,rgba(142,192,93,.15),transparent 55%),linear-gradient(160deg,#202d27,#18211d 68%); overflow:hidden; }
-    .viz-head { display:flex; justify-content:space-between; align-items:center; color:#89988d; font:9px 'DM Mono',monospace; letter-spacing:.7px; text-transform:uppercase; }
-    .viz-live { display:flex; align-items:center; gap:6px; color:#bddc9d; font-size:9px; }
-    .viz-live i { display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--green); box-shadow:0 0 9px var(--green); }
-    .road-svg { display:block; width:100%; height:auto; margin:3px auto 0; overflow:visible; filter:drop-shadow(0 12px 16px rgba(0,0,0,.2)); }
-    .road-surface { fill:url(#roadSurface); stroke:rgba(219,243,203,.18); stroke-width:1; }
-    .road-grid { fill:none; stroke:rgba(206,232,193,.12); stroke-width:1; }
-    .road-divider { fill:none; stroke:rgba(235,245,228,.52); stroke-width:2; stroke-dasharray:8 10; stroke-linecap:round; }
-    .road-edge { fill:none; stroke:rgba(194,232,162,.56); stroke-width:1.5; }
-    .car-shadow { fill:rgba(0,0,0,.35); }
-    .car-body { stroke:rgba(255,255,255,.72); stroke-width:1; }
-    .car-window { fill:#23352b; stroke:rgba(255,255,255,.22); stroke-width:.7; }
-    .car-wheel { fill:#101713; }
-    .car-current .car-body { fill:#e8eee4; }
-    .car-faster .car-body { fill:#b8f36b; stroke:#d7ffad; }
-    .car-glow { fill:none; stroke-width:2; opacity:.35; }
-    .car-current .car-glow { stroke:#e8eee4; }
-    .car-faster .car-glow { stroke:#b8f36b; }
-    .road-legend { display:flex; justify-content:space-between; gap:12px; border-top:1px solid rgba(255,255,255,.09); padding-top:10px; margin-top:-2px; }
-    .road-key { min-width:0; display:flex; align-items:center; gap:7px; color:#a0aaa1; font:9px 'DM Mono',monospace; }
-    .road-key b { color:#f2f5ef; font-weight:500; }
-    .road-key.faster b { color:#c7f29f; }
-    .key-dot { width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:#e8eee4; box-shadow:0 0 7px rgba(232,238,228,.65); }
-    .road-key.faster .key-dot { background:var(--green); box-shadow:0 0 8px rgba(184,243,107,.8); }
-    .viz-gain { color:#c7ed9e; font:9px 'DM Mono',monospace; white-space:nowrap; }
-    .compare { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:22px 0 18px; }
-    .time-card { border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.035); border-radius:12px; padding:14px 15px; }
-    .time-card.faster { border-color:rgba(184,243,107,.33); background:rgba(184,243,107,.07); }
-    .time-label { color:#9ba59d; font:10px 'DM Mono',monospace; text-transform:uppercase; letter-spacing:.6px; display:flex; gap:6px; align-items:center; }
-    .time-card.faster .time-label { color:#c0e69b; }
-    .time-value { color:#f6f8f4; font:600 22px Manrope,sans-serif; letter-spacing:-.7px; margin-top:9px; }
-    .time-detail { color:#849088; font:10px 'DM Mono',monospace; margin-top:3px; }
-    .timeline { position:relative; z-index:1; }
-    .timeline-caption { color:#97a199; display:flex; justify-content:space-between; font:10px 'DM Mono',monospace; margin-bottom:10px; }
-    .track { position:relative; height:7px; background:#3b4540; border-radius:8px; overflow:hidden; }
-    .track-fill { height:100%; width:73%; border-radius:8px; background:linear-gradient(90deg,#9bdc52,#c7fa86); transition:width .3s; }
-    .saved-chip { position:absolute; right:0; top:22px; color:#c7ef9f; font:10px 'DM Mono',monospace; }
-    .result-footer { z-index:1; position:relative; margin-top:34px; padding-top:15px; border-top:1px solid rgba(255,255,255,.1); display:flex; align-items:center; justify-content:space-between; color:#89938b; font-size:11px; }
-    .result-footer strong { font:500 11px 'DM Mono',monospace; color:#e8eee6; }
-    .footnote { text-align:center; color:#a0a69f; font-size:11px; margin-top:28px; }
-    footer { width:min(1120px, calc(100% - 56px)); margin:0 auto; border-top:1px solid rgba(23,33,29,.1); padding:19px 0 22px; color:#929991; display:flex; justify-content:space-between; font:10px 'DM Mono',monospace; }
-    footer span:last-child { color:#778078; }
-    @media (max-width:760px) { .topbar,main,footer { width:min(100% - 36px,520px); } .topbar {height:68px;} .top-note {font-size:9px;} main {padding:54px 0 42px;} .intro {margin-bottom:33px;} h1 {letter-spacing:-2.2px;} .intro p {font-size:14px;} .workspace {grid-template-columns:1fr; gap:14px;} .form-panel,.result-panel {padding:24px 22px;} .hero-result .number {font-size:66px;} .result-footer {margin-top:29px;} }
-    @media (max-width:390px) { .top-note {display:none;} .compare {gap:8px;} .time-card {padding:12px 11px;} .time-value {font-size:19px;} .hero-result {gap:10px;} .hero-result .number {font-size:58px;} }
+    :root {
+      color-scheme: light;
+      --paper: #f3f3ee;
+      --surface: #fafaf6;
+      --ink: #20251f;
+      --muted: #6e756c;
+      --soft: #969c92;
+      --line: #d9ddd3;
+      --line-strong: #c1c8ba;
+      --accent: #536b43;
+      --accent-dark: #354b2b;
+      --accent-light: #e6ecdf;
+      --chart-fill: rgba(83, 107, 67, .14);
+      --display: Georgia, "Times New Roman", serif;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --content: 1120px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    .site-header { width: min(var(--content), calc(100% - 56px)); height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 17px; font-weight: 650; letter-spacing: -.45px; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--accent-dark); }
+    .brand-mark svg { width: 19px; height: 19px; }
+    .header-link { color: var(--muted); font-size: 12px; text-decoration-color: var(--line-strong); text-underline-offset: 4px; }
+    .header-link:hover { color: var(--ink); }
+    main { width: min(var(--content), calc(100% - 56px)); margin: 0 auto; padding: 56px 0 72px; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(250px, .72fr); align-items: end; gap: 36px; margin-bottom: 36px; }
+    .intro h1 { max-width: 720px; margin: 0; font: 400 clamp(42px, 6vw, 68px)/.99 var(--display); letter-spacing: -2.8px; }
+    .intro-copy { max-width: 330px; padding-bottom: 5px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .intro-copy p { margin: 0 0 12px; }
+    .intro-copy .unit-note { color: var(--soft); font-size: 11px; }
+    .calculator { display: grid; grid-template-columns: minmax(310px, .82fr) minmax(0, 1.18fr); border: 1px solid var(--line); background: var(--surface); }
+    .controls { padding: 27px 30px 25px; border-right: 1px solid var(--line); }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 25px; }
+    .section-head h2, .result-head, .visual-head h2, .profile-head h2 { margin: 0; font-size: 16px; font-weight: 620; letter-spacing: -.3px; }
+    .samples { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: -8px 0 21px; }
+    .samples-label { margin-right: 3px; color: var(--soft); font-size: 10px; }
+    .sample-button { padding: 5px 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 10px; cursor: pointer; }
+    .sample-button:hover { border-color: var(--accent); color: var(--accent-dark); }
+    .unit-switch { display: inline-flex; padding: 3px; background: #edeee8; border: 1px solid var(--line); border-radius: 7px; }
+    .unit-switch button { min-width: 39px; padding: 5px 8px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
+    .unit-switch button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+    .field { margin-bottom: 18px; }
+    .field-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 7px; color: #40473d; font-size: 12px; font-weight: 600; }
+    .field-label small { color: var(--soft); font-size: 10px; font-weight: 400; }
+    .input-shell { display: flex; align-items: center; min-height: 48px; padding: 0 12px; border: 1px solid var(--line); background: #fff; transition: border-color .16s ease; }
+    .input-shell:focus-within { border-color: var(--accent); }
+    .input-shell input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 17px; font-variant-numeric: tabular-nums; }
+    .input-shell input::-webkit-inner-spin-button, .input-shell input::-webkit-outer-spin-button { margin: 0; }
+    .input-shell input[type=number] { appearance: textfield; -moz-appearance: textfield; }
+    .input-unit { margin-left: 10px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .speed-pair { display: grid; grid-template-columns: minmax(0, 1fr) 25px minmax(0, 1fr); align-items: end; gap: 9px; }
+    .speed-pair .field { margin: 0; }
+    .speed-arrow { align-self: center; margin-top: 15px; color: var(--soft); text-align: center; font-size: 15px; }
+    .increase-field .input-shell { border-color: #b7c4aa; }
+    .increase-field .input-shell input { color: var(--accent-dark); }
+    .slider-row { display: flex; align-items: center; gap: 10px; margin-top: 9px; }
+    .slider-row span { color: var(--soft); font-size: 10px; }
+    input[type=range] { width: 100%; height: 3px; accent-color: var(--accent); cursor: pointer; }
+    input[type=time] { font-size: 15px; }
+    .small-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 19px; }
+    .small-fields .field { margin: 0; }
+    .help-text { margin: 17px 0 0; color: var(--soft); font-size: 10px; line-height: 1.5; }
+    .forecast { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; border-top: 1px solid var(--line); }
+    .forecast-item { padding: 13px 8px 2px 0; }
+    .forecast-item + .forecast-item { padding-left: 14px; border-left: 1px solid var(--line); }
+    .forecast-item span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 10px; }
+    .forecast-item strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .forecast-note { margin: 11px 0 0; color: var(--soft); font-size: 9px; }
+    .estimate { padding: 27px 32px 25px; display: flex; flex-direction: column; justify-content: space-between; }
+    .estimate-top { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+    .result-head { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .live-label { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; }
+    .live-label::before { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); content: ""; }
+    .saved { display: flex; align-items: baseline; gap: 9px; margin: 13px 0 4px; font-variant-numeric: tabular-nums; }
+    .saved-value { font: 400 clamp(54px, 7vw, 82px)/.95 var(--display); letter-spacing: -3px; }
+    .saved-unit { max-width: 110px; color: var(--muted); font-size: 13px; line-height: 1.25; }
+    .saving-summary { color: var(--accent-dark); font-size: 13px; }
+    .estimate-bottom { margin-top: 26px; }
+    .eta-list { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .eta-item { padding: 12px 10px 12px 0; }
+    .eta-item + .eta-item { padding-left: 17px; border-left: 1px solid var(--line); }
+    .eta-item span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 10px; }
+    .eta-item strong { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .eta-item small { display: block; min-height: 14px; margin-top: 3px; color: var(--soft); font-size: 9px; }
+    .result-actions { display: flex; align-items: center; gap: 17px; margin-top: 17px; }
+    .copy-button { padding: 0; border: 0; border-bottom: 1px solid var(--accent); background: transparent; color: var(--accent-dark); font-size: 11px; cursor: pointer; }
+    .reset-button { padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
+    .copy-button:hover, .reset-button:hover { color: var(--ink); }
+    .action-status { min-height: 14px; color: var(--muted); font-size: 10px; }
+    .visual-section { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line-strong); }
+    .visual-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+    .visual-head h2, .profile-head h2 { font: 400 30px/1.1 var(--display); letter-spacing: -.6px; }
+    .visual-head p, .profile-head p { max-width: 340px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .route-axis { display: flex; justify-content: space-between; margin: 0 78px 9px 160px; color: var(--soft); font-size: 10px; }
+    .route-row { display: grid; grid-template-columns: 145px minmax(70px, 1fr) 80px; align-items: center; gap: 15px; min-height: 53px; }
+    .route-label strong { display: block; font-size: 12px; font-weight: 600; }
+    .route-label small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .route-track { position: relative; height: 16px; border-bottom: 1px solid var(--line-strong); }
+    .route-track::before { position: absolute; top: 7px; left: 0; width: 100%; height: 1px; background: #e3e5de; content: ""; }
+    .route-fill { position: absolute; top: 6px; left: 0; width: 100%; height: 3px; background: #8d9784; transition: width .24s ease; }
+    .route-fill.faster { background: var(--accent); }
+    .route-dot { position: absolute; top: 2px; right: -5px; width: 11px; height: 11px; border: 2px solid var(--surface); border-radius: 50%; background: #788271; box-shadow: 0 0 0 1px #788271; }
+    .route-fill.faster .route-dot { background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .finish-line { position: absolute; top: -5px; right: 0; height: 20px; border-right: 1px solid var(--line-strong); }
+    .route-time { color: var(--ink); text-align: right; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .route-insight { display: flex; align-items: center; gap: 9px; margin: 20px 0 0 160px; color: var(--muted); font-size: 11px; }
+    .route-insight strong { color: var(--accent-dark); font-weight: 600; }
+    .profile-section { display: grid; grid-template-columns: minmax(0, .9fr) minmax(340px, 1.1fr); gap: 54px; margin-top: 56px; padding-top: 25px; border-top: 1px solid var(--line-strong); }
+    .profile-head p { margin-top: 10px; }
+    .profile-key { margin-top: 24px; border-top: 1px solid var(--line); }
+    .profile-row { display: grid; grid-template-columns: minmax(115px, 1fr) minmax(85px, auto) minmax(92px, auto); align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+    .profile-row span { color: var(--muted); }
+    .profile-row strong { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .profile-row small { color: var(--soft); text-align: right; font-size: 9px; }
+    .radar-wrap { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; }
+    .radar-chart { display: block; width: min(100%, 470px); height: auto; overflow: visible; }
+    .radar-grid { fill: none; stroke: #dce0d6; stroke-width: 1; }
+    .radar-spoke { stroke: #dce0d6; stroke-width: 1; }
+    .radar-data { fill: var(--chart-fill); stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; transition: points .2s ease; }
+    .radar-point { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+    .radar-label { fill: var(--muted); font-family: var(--body); font-size: 10px; }
+    .radar-note { color: var(--soft); text-align: center; font-size: 9px; }
+    .site-footer { width: min(var(--content), calc(100% - 56px)); margin: 0 auto; padding: 20px 0 26px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 10px; }
+    .site-footer a { text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+    :focus-visible { outline: 3px solid rgba(83, 107, 67, .45); outline-offset: 3px; }
+    @media (max-width: 780px) {
+      .site-header, main, .site-footer { width: min(100% - 36px, 600px); }
+      .site-header { height: 66px; }
+      main { padding-top: 42px; }
+      .intro { grid-template-columns: 1fr; gap: 14px; margin-bottom: 26px; }
+      .intro h1 { max-width: 580px; font-size: clamp(43px, 9vw, 60px); }
+      .intro-copy { max-width: 460px; }
+      .calculator { grid-template-columns: 1fr; }
+      .controls { border-right: 0; border-bottom: 1px solid var(--line); padding: 23px; }
+      .estimate { padding: 23px; }
+      .saved-value { font-size: 68px; }
+      .profile-section { grid-template-columns: 1fr; gap: 26px; }
+      .profile-key { margin-top: 18px; }
+      .radar-wrap { order: -1; }
+      .radar-chart { max-width: 400px; }
+    }
+    @media (max-width: 480px) {
+      .header-link { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+      main { padding-bottom: 50px; }
+      .intro h1 { letter-spacing: -1.7px; }
+      .controls, .estimate { padding: 19px 17px; }
+      .speed-pair { grid-template-columns: minmax(0,1fr) 16px minmax(0,1fr); gap: 6px; }
+      .field-label { font-size: 11px; }
+      .input-shell { min-height: 45px; padding: 0 9px; }
+      .input-shell input { font-size: 15px; }
+      .input-unit { margin-left: 5px; font-size: 10px; }
+      .small-fields { gap: 10px; }
+      .visual-section { margin-top: 38px; }
+      .visual-head { display: block; }
+      .visual-head h2, .profile-head h2 { font-size: 27px; }
+      .visual-head p { margin-top: 8px; }
+      .route-axis { margin-left: 112px; margin-right: 65px; font-size: 9px; }
+      .route-row { grid-template-columns: 99px minmax(50px, 1fr) 58px; gap: 8px; min-height: 51px; }
+      .route-label strong { font-size: 10px; }
+      .route-label small { font-size: 9px; }
+      .route-time { font-size: 11px; }
+      .route-insight { margin-left: 0; font-size: 10px; }
+      .profile-section { margin-top: 40px; }
+      .profile-row { grid-template-columns: minmax(90px,1fr) auto; }
+      .profile-row small { grid-column: 1; grid-row: 2; text-align: left; margin-top: -5px; }
+      .profile-row strong { grid-column: 2; grid-row: 1 / span 2; }
+      .site-footer { flex-direction: column; gap: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
   </style>
   <!-- Vercel Speed Insights -->
   <script>
@@ -113,147 +198,348 @@
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16.5 9.5 11l3.2 3.2L20 7" stroke="#304b18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7H20v5.5" stroke="#304b18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>speedwise</div>
-      <div class="top-note">A clearer view of the road ahead</div>
-    </header>
-    <main>
-      <section class="intro">
-        <div class="eyebrow">The time-saved calculator</div>
-        <h1>A little faster.<br><span>How much sooner?</span></h1>
-        <p>See how much time a speed increase really saves on your trip. Just add your distance and cruising speed.</p>
-      </section>
-      <section class="workspace" aria-label="Speed comparison calculator">
-        <div class="panel form-panel">
-          <div class="panel-heading"><h2>Your trip</h2><span class="step">01 / 02</span></div>
-          <div class="field">
-            <div class="label-row"><label for="distance">Distance to destination</label><span class="hint">TRIP LENGTH</span></div>
-            <div class="input-wrap"><input id="distance" type="number" min="0.1" step="1" value="120" inputmode="decimal" aria-label="Distance to destination"/><span class="unit distance-unit">km</span></div>
+  <header class="site-header">
+    <a class="brand" href="https://speed-wise.vercel.app" aria-label="Speedwise home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 16.5 9.2 11l3.2 3.2L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.7 7H20v5.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>Speedwise</span>
+    </a>
+    <a class="header-link" href="https://speed-wise.vercel.app">speed-wise.vercel.app</a>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">See what a little more speed saves.</h1>
+      <div class="intro-copy">
+        <p>Compare two ways to make the same trip. Get clear travel times, arrival estimates, and a view of the minutes you could reclaim.</p>
+        <span class="unit-note">A steady-speed estimate for planning, not a promise of real-world arrival time.</span>
+      </div>
+    </section>
+
+    <section class="calculator" id="calculator" aria-label="Trip time calculator">
+      <div class="controls">
+        <div class="section-head">
+          <h2>Your trip</h2>
+          <div class="unit-switch" role="group" aria-label="Distance and speed units">
+            <button type="button" data-unit="km" aria-pressed="true">km</button>
+            <button type="button" data-unit="mi" aria-pressed="false">mi</button>
           </div>
-          <div class="field">
-            <div class="label-row"><label for="speed">Your current speed</label><span class="hint">CRUISING SPEED</span></div>
-            <div class="input-wrap"><input id="speed" type="number" min="1" step="1" value="80" inputmode="decimal" aria-label="Your current speed"/><span class="unit speed-unit">km/h</span></div>
-          </div>
-          <div class="field">
-            <div class="label-row"><label for="increase">Speed increase</label><span class="hint">EXTRA SPEED</span></div>
-            <div class="input-wrap increase-wrap"><input id="increase" type="number" min="0" step="1" value="20" inputmode="decimal" aria-label="Speed increase"/><span class="increment"><span class="plus">+</span><span class="speed-unit">km/h</span></span></div>
-          </div>
-          <div class="bottom-line"><span>Assumes a steady speed throughout</span><span id="total-speed">80 → 100 km/h</span></div>
         </div>
-        <div class="panel result-panel" aria-live="polite">
-          <div class="panel-heading"><h2>Your time saved</h2><span class="live"><i></i> LIVE ESTIMATE</span></div>
-          <div class="hero-result"><div class="number" id="saved-number">18</div><div class="unit-large"><strong id="saved-unit">minutes</strong>sooner to arrive</div></div>
-          <div class="result-subtitle" id="result-subtitle">That’s 15% less time on the road.</div>
-          <div class="road-viz">
-            <div class="viz-head"><span>Same moment on the road</span><span class="viz-live"><i></i> 3D route view</span></div>
-            <svg class="road-svg" viewBox="0 0 560 210" role="img" aria-labelledby="road-title road-desc">
-              <title id="road-title">3D speed comparison road</title>
-              <desc id="road-desc">A perspective road showing the current-speed vehicle and faster vehicle at the same elapsed time.</desc>
-              <defs>
-                <linearGradient id="roadSurface" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#46564b"/><stop offset="1" stop-color="#202a24"/></linearGradient>
-                <linearGradient id="roadGlow" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b8f36b" stop-opacity=".24"/><stop offset="1" stop-color="#b8f36b" stop-opacity="0"/></linearGradient>
-                <radialGradient id="horizonGlow"><stop stop-color="#c0f485" stop-opacity=".5"/><stop offset="1" stop-color="#c0f485" stop-opacity="0"/></radialGradient>
-              </defs>
-              <ellipse cx="280" cy="25" rx="132" ry="38" fill="url(#horizonGlow)"/>
-              <path class="road-surface" d="M228 28 L332 28 L553 197 L7 197 Z"/>
-              <path d="M280 28 L7 197 L553 197 Z" fill="url(#roadGlow)" opacity=".14"/>
-              <path class="road-edge" d="M228 28 L7 197 M332 28 L553 197"/>
-              <path class="road-divider" d="M280 30 L280 197"/>
-              <path class="road-grid" d="M228 28 L7 197 M254 28 L166 197 M306 28 L394 197 M332 28 L553 197"/>
-              <path class="road-grid" d="M216 39 L344 39 M190 60 L370 60 M160 84 L400 84 M126 110 L434 110 M91 138 L469 138 M45 173 L515 173"/>
-              <path d="M262 45 L255 50 M298 45 L305 50" stroke="#e7f1df" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
-              <g id="current-car" class="car-current" transform="translate(0 0) scale(.7)">
-                <ellipse class="car-shadow" cx="0" cy="3" rx="15" ry="23"/>
-                <ellipse class="car-glow" cx="0" cy="0" rx="22" ry="31"/>
-                <path class="car-body" d="M-10 15 L-13 7 L-12 -12 Q-11 -18 -7 -20 L7 -20 Q11 -18 12 -12 L13 7 L10 15 Q0 19 -10 15 Z"/>
-                <path class="car-window" d="M-8 -8 Q-7 -15 -4 -16 L4 -16 Q7 -15 8 -8 L7 -3 L-7 -3 Z"/>
-                <path class="car-window" d="M-7 1 L7 1 L8 8 Q0 11 -8 8 Z"/>
-                <rect class="car-wheel" x="-14" y="-12" width="3" height="8" rx="1"/><rect class="car-wheel" x="11" y="-12" width="3" height="8" rx="1"/>
-                <rect class="car-wheel" x="-14" y="7" width="3" height="7" rx="1"/><rect class="car-wheel" x="11" y="7" width="3" height="7" rx="1"/>
-              </g>
-              <g id="faster-car" class="car-faster" transform="translate(0 0) scale(.7)">
-                <ellipse class="car-shadow" cx="0" cy="3" rx="15" ry="23"/>
-                <ellipse class="car-glow" cx="0" cy="0" rx="22" ry="31"/>
-                <path class="car-body" d="M-10 15 L-13 7 L-12 -12 Q-11 -18 -7 -20 L7 -20 Q11 -18 12 -12 L13 7 L10 15 Q0 19 -10 15 Z"/>
-                <path class="car-window" d="M-8 -8 Q-7 -15 -4 -16 L4 -16 Q7 -15 8 -8 L7 -3 L-7 -3 Z"/>
-                <path class="car-window" d="M-7 1 L7 1 L8 8 Q0 11 -8 8 Z"/>
-                <rect class="car-wheel" x="-14" y="-12" width="3" height="8" rx="1"/><rect class="car-wheel" x="11" y="-12" width="3" height="8" rx="1"/>
-                <rect class="car-wheel" x="-14" y="7" width="3" height="7" rx="1"/><rect class="car-wheel" x="11" y="7" width="3" height="7" rx="1"/>
-              </g>
-            </svg>
-            <div class="road-legend">
-              <span class="road-key"><i class="key-dot"></i><span>Current · <b id="viz-base-speed">80 km/h</b></span></span>
-              <span class="viz-gain" id="viz-gain">+25% farther</span>
-              <span class="road-key faster"><i class="key-dot"></i><span>Faster · <b id="viz-fast-speed">100 km/h</b></span></span>
-            </div>
-          </div>
-          <div class="compare">
-            <div class="time-card"><div class="time-label">● &nbsp;At <span id="base-speed-label">80 km/h</span></div><div class="time-value" id="base-time">1h 30m</div><div class="time-detail">estimated travel time</div></div>
-            <div class="time-card faster"><div class="time-label">↗ &nbsp;At <span id="new-speed-label">100 km/h</span></div><div class="time-value" id="new-time">1h 12m</div><div class="time-detail">estimated travel time</div></div>
-          </div>
-          <div class="timeline"><div class="timeline-caption"><span>Time at current speed</span><span id="percent-label">15% less</span></div><div class="track"><div class="track-fill" id="track-fill"></div></div><div class="saved-chip" id="saved-chip">−18 min</div></div>
-          <div class="result-footer"><span>Distance covered</span><strong id="distance-label">120 km</strong></div>
+        <div class="samples" aria-label="Load a sample trip">
+          <span class="samples-label">Try a sample</span>
+          <button class="sample-button" type="button" data-sample="quick">Quick trip</button>
+          <button class="sample-button" type="button" data-sample="day">Day trip</button>
+          <button class="sample-button" type="button" data-sample="long">Long drive</button>
         </div>
-      </section>
-      <p class="footnote">An estimate for comparison only. Real arrival times depend on traffic, stops, and road conditions.</p>
-    </main>
-    <footer><span>speedwise · time, put in perspective</span><span>Made for the journey</span></footer>
-  </div>
+        <div class="field">
+          <label class="field-label" for="distance"><span>Distance</span><small>to your destination</small></label>
+          <div class="input-shell"><input id="distance" type="number" min="0.1" step="0.1" value="120" inputmode="decimal" /><span class="input-unit distance-unit">km</span></div>
+        </div>
+        <div class="speed-pair">
+          <div class="field">
+            <label class="field-label" for="speed"><span>Current speed</span></label>
+            <div class="input-shell"><input id="speed" type="number" min="1" step="1" value="80" inputmode="decimal" /><span class="input-unit speed-unit">km/h</span></div>
+          </div>
+          <div class="speed-arrow" aria-hidden="true">+</div>
+          <div class="field increase-field">
+            <label class="field-label" for="increase"><span>Speed increase</span></label>
+            <div class="input-shell"><input id="increase" type="number" min="0" step="1" value="20" inputmode="decimal" /><span class="input-unit speed-unit">km/h</span></div>
+          </div>
+        </div>
+        <div class="slider-row"><span>0</span><input id="increase-range" type="range" min="0" max="60" step="1" value="20" aria-label="Adjust speed increase" /><span id="range-max">60</span></div>
+        <div class="small-fields">
+          <div class="field">
+            <label class="field-label" for="departure"><span>Leave at</span><small>optional</small></label>
+            <div class="input-shell"><input id="departure" type="time" aria-label="Departure time, local" /></div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="frequency"><span>Trips like this</span><small>per week</small></label>
+            <div class="input-shell"><input id="frequency" type="number" min="1" max="30" step="1" value="1" inputmode="numeric" /></div>
+          </div>
+        </div>
+        <p class="help-text">Arrival times use your local clock. Weekly savings use the trip frequency you set.</p>
+      </div>
+
+      <div class="estimate" aria-live="polite">
+        <div>
+          <div class="estimate-top"><p class="result-head">Estimated time saved per trip</p><span class="live-label">Updates as you type</span></div>
+          <div class="saved"><strong class="saved-value" id="saved-value">18</strong><span class="saved-unit" id="saved-unit">minutes sooner</span></div>
+          <p class="saving-summary" id="saving-summary">20% less time on the road</p>
+        </div>
+        <div class="estimate-bottom">
+          <div class="eta-list">
+            <div class="eta-item"><span>At <b id="base-speed-text">80 km/h</b></span><strong id="base-time">1h 30m</strong><small id="base-arrival">Set a leave time for ETA</small></div>
+            <div class="eta-item"><span>At <b id="fast-speed-text">100 km/h</b></span><strong id="fast-time">1h 12m</strong><small id="fast-arrival">Set a leave time for ETA</small></div>
+          </div>
+          <div class="result-actions">
+            <button class="copy-button" id="copy-button" type="button">Copy trip summary</button>
+            <button class="reset-button" id="reset-button" type="button">Reset example</button>
+            <span class="action-status" id="action-status" role="status" aria-live="polite"></span>
+          </div>
+          <div class="forecast" aria-label="Estimated time saved across repeated trips">
+            <div class="forecast-item"><span>Per week</span><strong id="weekly-time">18 min</strong></div>
+            <div class="forecast-item"><span>Monthly average</span><strong id="monthly-time">1h 18m</strong></div>
+            <div class="forecast-item"><span>Per year</span><strong id="yearly-time">15h 36m</strong></div>
+          </div>
+          <p class="forecast-note" id="forecast-note">Assumes the same trip frequency for 52 weeks.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="visual-section" aria-labelledby="route-title">
+      <div class="visual-head">
+        <h2 id="route-title">Two times. One route.</h2>
+        <p>Each line starts together. The shorter line reaches the same destination sooner.</p>
+      </div>
+      <div class="route-axis" aria-hidden="true"><span>Start</span><span>Destination</span></div>
+      <div class="route-row">
+        <div class="route-label"><strong>Current pace</strong><small id="current-route-speed">80 km/h</small></div>
+        <div class="route-track" role="img" id="base-route-image" aria-label="Current pace timeline">
+          <div class="route-fill"><span class="route-dot"></span></div><span class="finish-line"></span>
+        </div>
+        <div class="route-time" id="base-route-time">1h 30m</div>
+      </div>
+      <div class="route-row">
+        <div class="route-label"><strong>With the increase</strong><small id="faster-route-speed">100 km/h</small></div>
+        <div class="route-track" role="img" id="fast-route-image" aria-label="Faster pace timeline">
+          <div class="route-fill faster" id="fast-route-fill" style="width:80%"><span class="route-dot"></span></div><span class="finish-line"></span>
+        </div>
+        <div class="route-time" id="fast-route-time">1h 12m</div>
+      </div>
+      <p class="route-insight"><strong id="route-difference">18 minutes earlier</strong><span>at the same destination</span></p>
+    </section>
+
+    <section class="profile-section" aria-labelledby="profile-title">
+      <div>
+        <div class="profile-head">
+          <h2 id="profile-title">Your trip, in five measures.</h2>
+          <p>The shape changes with your inputs. Each point is measured against its own reference, so this is a trip profile, not a rating.</p>
+        </div>
+        <div class="profile-key">
+          <div class="profile-row"><span>Trip distance</span><strong id="stat-distance">120 km</strong><small id="scale-distance">scale: 500 km</small></div>
+          <div class="profile-row"><span>Current speed</span><strong id="stat-current">80 km/h</strong><small id="scale-speed">scale: 160 km/h</small></div>
+          <div class="profile-row"><span>New speed</span><strong id="stat-faster">100 km/h</strong><small id="scale-speed-2">scale: 160 km/h</small></div>
+          <div class="profile-row"><span>Minutes saved</span><strong id="stat-minutes">18 min</strong><small>scale: 120 min</small></div>
+          <div class="profile-row"><span>Time reduced</span><strong id="stat-percent">20%</strong><small>scale: 50%</small></div>
+        </div>
+      </div>
+      <div class="radar-wrap">
+        <svg class="radar-chart" viewBox="0 0 380 250" role="img" aria-labelledby="radar-title radar-desc">
+          <title id="radar-title">Five-axis trip profile</title>
+          <desc id="radar-desc">A five-axis plot of distance, current speed, faster speed, minutes saved, and percentage of travel time reduced.</desc>
+          <g id="radar-grid"></g>
+          <polygon class="radar-data" id="radar-data" points="190,125 190,125 190,125 190,125 190,125" />
+          <g id="radar-points"></g>
+          <text class="radar-label" x="190" y="17" text-anchor="middle">Distance</text>
+          <text class="radar-label" x="290" y="96" text-anchor="start">Current</text>
+          <text class="radar-label" x="255" y="239" text-anchor="start">New speed</text>
+          <text class="radar-label" x="125" y="239" text-anchor="end">Saved time</text>
+          <text class="radar-label" x="90" y="96" text-anchor="end">Time cut</text>
+        </svg>
+        <p class="radar-note">Reference limits are listed beside each measure.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <span>Speedwise. Make the minutes count.</span>
+    <a href="https://speed-wise.vercel.app">speed-wise.vercel.app</a>
+  </footer>
+
   <script>
-    const distanceInput = document.getElementById('distance');
-    const speedInput = document.getElementById('speed');
-    const increaseInput = document.getElementById('increase');
-    const fmt = (n) => new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(n);
-    function duration(hours) {
-      const totalMinutes = Math.max(0, Math.round(hours * 60));
-      const h = Math.floor(totalMinutes / 60), m = totalMinutes % 60;
-      if (h && m) return `${h}h ${m}m`;
-      if (h) return `${h}h`;
-      return `${m}m`;
-    }
-    function render() {
-      const distance = Math.max(0, Number(distanceInput.value) || 0);
-      const speed = Math.max(0, Number(speedInput.value) || 0);
-      const increase = Math.max(0, Number(increaseInput.value) || 0);
-      const fasterSpeed = speed + increase;
-      const baseHours = speed ? distance / speed : 0;
-      const fasterHours = fasterSpeed ? distance / fasterSpeed : 0;
-      const savedMins = Math.max(0, Math.round((baseHours - fasterHours) * 60));
-      const pct = baseHours ? Math.round((1 - fasterHours / baseHours) * 100) : 0;
-      const unit = 'km';
-      document.querySelectorAll('.distance-unit').forEach(el => el.textContent = unit);
-      document.querySelectorAll('.speed-unit').forEach(el => el.textContent = `${unit}/h`);
-      document.getElementById('total-speed').textContent = `${fmt(speed)} → ${fmt(fasterSpeed)} ${unit}/h`;
-      document.getElementById('base-speed-label').textContent = `${fmt(speed)} ${unit}/h`;
-      document.getElementById('new-speed-label').textContent = `${fmt(fasterSpeed)} ${unit}/h`;
-      document.getElementById('base-time').textContent = duration(baseHours);
-      document.getElementById('new-time').textContent = duration(fasterHours);
-      document.getElementById('saved-number').textContent = savedMins >= 60 ? fmt(savedMins / 60) : savedMins;
-      document.getElementById('saved-unit').textContent = savedMins >= 60 ? 'hours' : savedMins === 1 ? 'minute' : 'minutes';
-      document.getElementById('result-subtitle').textContent = baseHours ? `That’s ${pct}% less time on the road.` : 'Enter a distance and speed to see your time saved.';
-      document.getElementById('percent-label').textContent = `${pct}% less`;
-      document.getElementById('saved-chip').textContent = `−${duration(savedMins / 60)}`;
-      document.getElementById('distance-label').textContent = `${fmt(distance)} ${unit}`;
-      document.getElementById('track-fill').style.width = `${Math.max(3, Math.min(100, pct))}%`;
-      document.getElementById('viz-base-speed').textContent = `${fmt(speed)} ${unit}/h`;
-      document.getElementById('viz-fast-speed').textContent = `${fmt(fasterSpeed)} ${unit}/h`;
-      const gain = speed ? Math.round((fasterSpeed / speed - 1) * 100) : 0;
-      document.getElementById('viz-gain').textContent = speed ? `+${gain}% farther` : 'Set a speed to compare';
-      const currentProgress = .48;
-      const fasterProgress = speed ? Math.min(.94, currentProgress * fasterSpeed / speed) : currentProgress;
-      const placeCar = (id, progress, lane) => {
-        const x = lane === 'current' ? 260 - 125 * progress : 300 + 125 * progress;
-        const y = 30 + 165 * progress;
-        const scale = .55 + .45 * progress;
-        document.getElementById(id).setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
+    (() => {
+      const byId = (id) => document.getElementById(id);
+      const fields = {
+        distance: byId('distance'), speed: byId('speed'), increase: byId('increase'),
+        range: byId('increase-range'), departure: byId('departure'), frequency: byId('frequency')
       };
-      placeCar('current-car', currentProgress, 'current');
-      placeCar('faster-car', fasterProgress, 'faster');
-      document.getElementById('road-desc').textContent = `Perspective road comparison at the same elapsed time: current speed ${fmt(speed)} kilometers per hour, faster speed ${fmt(fasterSpeed)} kilometers per hour.`;
-    }
-    [distanceInput, speedInput, increaseInput].forEach(input => input.addEventListener('input', render));
-    render();
+      let unit = 'km';
+      const kmToMi = 0.621371;
+      const numberFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });
+      const formatNumber = (value) => numberFormat.format(Number.isFinite(value) ? value : 0);
+      const unitSpeed = () => `${unit}/h`;
+      const duration = (minutes) => {
+        if (!Number.isFinite(minutes) || minutes < 0) return '—';
+        const rounded = Math.round(minutes);
+        const hours = Math.floor(rounded / 60);
+        const mins = rounded % 60;
+        if (hours && mins) return `${hours}h ${mins}m`;
+        if (hours) return `${hours}h`;
+        return `${mins} min`;
+      };
+      const toLocalTime = (departure, minutes) => {
+        if (!departure || !Number.isFinite(minutes)) return null;
+        const [h, m] = departure.split(':').map(Number);
+        const total = h * 60 + m + Math.round(minutes);
+        const day = Math.floor(total / 1440);
+        const clock = ((total % 1440) + 1440) % 1440;
+        const date = new Date();
+        date.setHours(Math.floor(clock / 60), clock % 60, 0, 0);
+        const label = date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        return day === 0 ? label : day === 1 ? `${label}, next day` : `${label}, +${day} days`;
+      };
+      const setText = (id, text) => { byId(id).textContent = text; };
+
+      function updateRadar(values) {
+        const cx = 190, cy = 125, radius = 75;
+        const angles = [-90, -18, 54, 126, 198].map((angle) => angle * Math.PI / 180);
+        const pointAt = (index, scale) => `${(cx + Math.cos(angles[index]) * radius * scale).toFixed(1)},${(cy + Math.sin(angles[index]) * radius * scale).toFixed(1)}`;
+        const grid = byId('radar-grid');
+        if (!grid.childElementCount) {
+          [0.25, 0.5, 0.75, 1].forEach((scale) => {
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('class', 'radar-grid');
+            polygon.setAttribute('points', angles.map((_, i) => pointAt(i, scale)).join(' '));
+            grid.appendChild(polygon);
+          });
+          angles.forEach((_, i) => {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'radar-spoke');
+            line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+            line.setAttribute('x2', (cx + Math.cos(angles[i]) * radius).toFixed(1));
+            line.setAttribute('y2', (cy + Math.sin(angles[i]) * radius).toFixed(1));
+            grid.appendChild(line);
+          });
+        }
+        const clamped = values.map((value) => Math.max(0, Math.min(1, value)));
+        byId('radar-data').setAttribute('points', clamped.map((scale, i) => pointAt(i, scale)).join(' '));
+        const group = byId('radar-points');
+        group.replaceChildren();
+        clamped.forEach((scale, i) => {
+          const [x, y] = pointAt(i, scale).split(',');
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('class', 'radar-point'); circle.setAttribute('cx', x); circle.setAttribute('cy', y); circle.setAttribute('r', '3.5');
+          group.appendChild(circle);
+        });
+      }
+
+      function render() {
+        const distance = Math.max(0, Number(fields.distance.value) || 0);
+        const speed = Math.max(0, Number(fields.speed.value) || 0);
+        const increase = Math.max(0, Number(fields.increase.value) || 0);
+        const fasterSpeed = speed + increase;
+        const trips = Math.max(1, Math.min(30, Math.round(Number(fields.frequency.value) || 1)));
+        fields.frequency.value = String(trips);
+        const valid = distance > 0 && speed > 0 && fasterSpeed > 0;
+        const baseMinutes = valid ? distance / speed * 60 : NaN;
+        const fasterMinutes = valid ? distance / fasterSpeed * 60 : NaN;
+        const savedMinutes = valid ? Math.max(0, baseMinutes - fasterMinutes) : NaN;
+        const savedPercent = valid && baseMinutes ? savedMinutes / baseMinutes * 100 : 0;
+        const speedUnit = unitSpeed();
+
+        document.querySelectorAll('.distance-unit').forEach((el) => { el.textContent = unit; });
+        document.querySelectorAll('.speed-unit').forEach((el) => { el.textContent = speedUnit; });
+        setText('base-speed-text', `${formatNumber(speed)} ${speedUnit}`);
+        setText('fast-speed-text', `${formatNumber(fasterSpeed)} ${speedUnit}`);
+        setText('base-time', duration(baseMinutes));
+        setText('fast-time', duration(fasterMinutes));
+        setText('base-route-time', duration(baseMinutes));
+        setText('fast-route-time', duration(fasterMinutes));
+        setText('current-route-speed', `${formatNumber(speed)} ${speedUnit}`);
+        setText('faster-route-speed', `${formatNumber(fasterSpeed)} ${speedUnit}`);
+        setText('stat-distance', `${formatNumber(distance)} ${unit}`);
+        setText('stat-current', `${formatNumber(speed)} ${speedUnit}`);
+        setText('stat-faster', `${formatNumber(fasterSpeed)} ${speedUnit}`);
+        setText('scale-distance', `scale: ${unit === 'km' ? '500 km' : '300 mi'}`);
+        setText('scale-speed', `scale: ${unit === 'km' ? '160 km/h' : '100 mi/h'}`);
+        setText('scale-speed-2', `scale: ${unit === 'km' ? '160 km/h' : '100 mi/h'}`);
+
+        const savedRounded = valid ? Math.max(0, Math.round(savedMinutes)) : 0;
+        setText('saved-value', valid ? (savedRounded >= 60 ? duration(savedRounded) : String(savedRounded)) : '—');
+        setText('saved-unit', valid ? (savedRounded >= 60 ? 'sooner per trip' : 'minutes sooner') : 'enter a valid distance and speed');
+        setText('saving-summary', valid ? `${Math.round(savedPercent)}% less time on the road` : 'Enter a distance and a speed above zero to compare.');
+        setText('stat-minutes', valid ? `${savedRounded} min` : '—');
+        setText('stat-percent', valid ? `${Math.round(savedPercent)}%` : '—');
+        const weeklySaved = valid ? savedMinutes * trips : NaN;
+        setText('weekly-time', valid ? duration(weeklySaved) : '—');
+        setText('monthly-time', valid ? duration(weeklySaved * 52 / 12) : '—');
+        setText('yearly-time', valid ? duration(weeklySaved * 52) : '—');
+        setText('forecast-note', valid ? `Based on ${trips} similar ${trips === 1 ? 'trip' : 'trips'} each week, repeated for 52 weeks.` : 'Enter a valid trip to see longer-term estimates.');
+        setText('route-difference', valid ? `${duration(savedMinutes)} earlier` : 'Add trip details');
+
+        const baseArrival = toLocalTime(fields.departure.value, baseMinutes);
+        const fastArrival = toLocalTime(fields.departure.value, fasterMinutes);
+        setText('base-arrival', baseArrival || 'Set a leave time for ETA');
+        setText('fast-arrival', fastArrival || 'Set a leave time for ETA');
+
+        const ratio = valid && baseMinutes ? Math.max(0.025, Math.min(1, fasterMinutes / baseMinutes)) : 0.8;
+        byId('fast-route-fill').style.width = `${ratio * 100}%`;
+        byId('base-route-image').setAttribute('aria-label', valid ? `At ${formatNumber(speed)} ${speedUnit}, the trip takes ${duration(baseMinutes)}.` : 'Enter valid distance and speed for route comparison.');
+        byId('fast-route-image').setAttribute('aria-label', valid ? `At ${formatNumber(fasterSpeed)} ${speedUnit}, the trip takes ${duration(fasterMinutes)}.` : 'Enter valid distance and speed for route comparison.');
+
+        const distanceCap = unit === 'km' ? 500 : 300;
+        const speedCap = unit === 'km' ? 160 : 100;
+        const stats = [
+          Math.min(1, distance / distanceCap),
+          Math.min(1, speed / speedCap),
+          Math.min(1, fasterSpeed / speedCap),
+          valid ? Math.min(1, savedMinutes / 120) : 0.04,
+          Math.min(1, savedPercent / 50)
+        ];
+        updateRadar(stats);
+        byId('radar-desc').textContent = valid
+          ? `Trip profile based on ${formatNumber(distance)} ${unit}, current speed ${formatNumber(speed)} ${speedUnit}, faster speed ${formatNumber(fasterSpeed)} ${speedUnit}, ${savedRounded} minutes saved, and ${Math.round(savedPercent)} percent less travel time.`
+          : 'Enter a distance and speed to view your five-measure trip profile.';
+
+        const maxRange = Math.max(60, Math.ceil(increase / 20) * 20);
+        fields.range.max = String(maxRange);
+        setText('range-max', String(maxRange));
+        fields.range.value = String(Math.min(increase, maxRange));
+      }
+
+      function setUnit(nextUnit) {
+        if (nextUnit === unit) return;
+        const factor = nextUnit === 'mi' ? kmToMi : 1 / kmToMi;
+        ['distance', 'speed', 'increase'].forEach((key) => {
+          const current = Number(fields[key].value) || 0;
+          fields[key].value = String(Math.round(current * factor * 10) / 10);
+        });
+        unit = nextUnit;
+        document.querySelectorAll('.unit-switch button').forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.unit === unit));
+        });
+        render();
+      }
+
+      [fields.distance, fields.speed, fields.increase, fields.departure, fields.frequency].forEach((input) => input.addEventListener('input', render));
+      fields.increase.addEventListener('input', () => { fields.range.value = String(Math.min(Number(fields.increase.value) || 0, Number(fields.range.max))); });
+      fields.range.addEventListener('input', () => { fields.increase.value = fields.range.value; render(); });
+      document.querySelectorAll('.unit-switch button').forEach((button) => button.addEventListener('click', () => setUnit(button.dataset.unit)));
+      const samples = {
+        quick: { distance: 24, speed: 40, increase: 10 },
+        day: { distance: 120, speed: 80, increase: 20 },
+        long: { distance: 360, speed: 100, increase: 20 }
+      };
+      document.querySelectorAll('[data-sample]').forEach((button) => button.addEventListener('click', () => {
+        const sample = samples[button.dataset.sample];
+        const factor = unit === 'mi' ? kmToMi : 1;
+        fields.distance.value = String(Math.round(sample.distance * factor * 10) / 10);
+        fields.speed.value = String(Math.round(sample.speed * factor * 10) / 10);
+        fields.increase.value = String(Math.round(sample.increase * factor * 10) / 10);
+        byId('action-status').textContent = `${button.textContent} loaded.`;
+        render();
+      }));
+      byId('reset-button').addEventListener('click', () => {
+        unit = 'km';
+        fields.distance.value = '120'; fields.speed.value = '80'; fields.increase.value = '20';
+        fields.departure.value = ''; fields.frequency.value = '1';
+        document.querySelectorAll('.unit-switch button').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.unit === unit)));
+        byId('action-status').textContent = '';
+        render();
+      });
+      byId('copy-button').addEventListener('click', async () => {
+        const distance = formatNumber(Number(fields.distance.value) || 0);
+        const speed = Number(fields.speed.value) || 0;
+        const fasterSpeed = speed + (Number(fields.increase.value) || 0);
+        const valid = distance !== '0' && speed > 0;
+        if (!valid) { byId('action-status').textContent = 'Add valid trip details first.'; return; }
+        const text = `Speedwise trip: ${distance} ${unit}. At ${formatNumber(speed)} ${unitSpeed()}, ${byId('base-time').textContent}; at ${formatNumber(fasterSpeed)} ${unitSpeed()}, ${byId('fast-time').textContent}. Estimated time saved: ${byId('saved-value').textContent} ${byId('saved-unit').textContent}.`;
+        try {
+          await navigator.clipboard.writeText(text);
+          byId('action-status').textContent = 'Trip summary copied.';
+        } catch {
+          byId('action-status').textContent = 'Clipboard access is unavailable in this browser.';
+        }
+      });
+      render();
+    })();
   </script>
 </body>
 </html>

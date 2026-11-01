@@ -4,9 +4,9 @@ Speedwise compares two steady-speed estimates for the same trip. Enter a distanc
 
 ## Live site
 
-[https://speed-wise.bursale.app](https://speed-wise.bursale.app)
+[https://speed-wise.vercel.app](https://speed-wise.vercel.app)
 
-The custom domain is attached to the Speedwise Vercel project. Vercel currently reports that its DNS is not configured yet. Add the following CNAME record with your DNS provider:
+The custom domain `speed-wise.bursale.app` is also attached to the Speedwise Vercel project, but Vercel reports that its DNS is not configured yet. To activate it, add this CNAME record with your DNS provider:
 
 - **Name:** `speed-wise`
 - **Target:** `24389b687d6b32e5.vercel-dns-017.com`

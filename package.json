@@ -1,15 +1,19 @@
 {
-  "name": "speed-comparison",
+  "name": "speedwise",
   "version": "1.0.0",
-  "description": "A responsive calculator that compares estimated travel times at your current speed and an increased speed",
+  "description": "A neo-brutalist, browser-based trip time calculator with interactive travel comparisons and statistics.",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "node scripts/check-inline-js.mjs",
+    "serve": "python3 -m http.server 4173"
   },
   "keywords": [
-    "speed",
-    "comparison",
-    "calculator"
+    "speedwise",
+    "travel-time-calculator",
+    "trip-planning",
+    "arrival-estimates",
+    "time-savings",
+    "neo-brutalist"
   ],
   "author": "",
   "license": "ISC",

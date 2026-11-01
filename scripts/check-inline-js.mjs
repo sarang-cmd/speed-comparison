@@ -13,5 +13,6 @@ for (const id of ['distance', 'speed', 'increase', 'departure', 'frequency', 'ra
   assert.ok(html.includes(`id="${id}"`), `Missing required calculator element: ${id}`);
 }
 assert.ok(existsSync(new URL('../favicon.svg', import.meta.url)), 'favicon.svg must exist');
+assert.ok(existsSync(new URL('../assets/fonts/space-grotesk-latin.woff2', import.meta.url)), 'bundled interface font must exist');
 
-console.log(`Speedwise checks passed: ${inlineScripts.length} inline scripts parse; calculator hooks and favicon are present.`);
+console.log(`Speedwise checks passed: ${inlineScripts.length} inline scripts parse; calculator hooks, favicon, and bundled font are present.`);

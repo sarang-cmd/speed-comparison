@@ -98,16 +98,6 @@ Then open `http://localhost:4173`. The HTML can also be opened directly in a bro
 
 `npm test` parses the inline JavaScript and checks that key calculator elements and the favicon are present. It does not replace a browser-based visual or accessibility audit.
 
-## Deployment
-
-The production-facing Vercel address is [speed-wise.vercel.app](https://speed-wise.vercel.app). The project is configured as a static site served from the repository root; no build output is generated.
-
-The alternate custom domain `speed-wise.bursale.app` is attached to the Vercel project. Vercel previously reported its DNS as unconfigured and recommended this CNAME record:
-
-- **Name:** `speed-wise`
-- **Target:** `24389b687d6b32e5.vercel-dns-017.com`
-
-The DNS provider must publish the record before that alternate hostname can resolve correctly. Check the Vercel project domain settings for the current status.
 
 ## Suggested GitHub repository metadata
 

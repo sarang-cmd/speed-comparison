@@ -16,7 +16,8 @@ The custom domain `speed-wise.bursale.app` is also attached to the Speedwise Ver
 - Switch between kilometres and miles.
 - Compare current and increased-speed travel times on a left-to-right route timeline.
 - Add an optional local departure time to estimate both arrival times.
-- Estimate weekly time saved based on the number of similar trips.
+- Load quick-trip, day-trip, or long-drive examples.
+- Estimate weekly, monthly, and yearly time saved based on the number of similar trips.
 - Copy a concise trip summary.
 - Review a five-measure pentagon trip profile with its reference scales.
 

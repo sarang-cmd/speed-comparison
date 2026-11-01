@@ -47,6 +47,10 @@
     .controls { padding: 27px 30px 25px; border-right: 1px solid var(--line); }
     .section-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 25px; }
     .section-head h2, .result-head, .visual-head h2, .profile-head h2 { margin: 0; font-size: 16px; font-weight: 620; letter-spacing: -.3px; }
+    .samples { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: -8px 0 21px; }
+    .samples-label { margin-right: 3px; color: var(--soft); font-size: 10px; }
+    .sample-button { padding: 5px 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 10px; cursor: pointer; }
+    .sample-button:hover { border-color: var(--accent); color: var(--accent-dark); }
     .unit-switch { display: inline-flex; padding: 3px; background: #edeee8; border: 1px solid var(--line); border-radius: 7px; }
     .unit-switch button { min-width: 39px; padding: 5px 8px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
     .unit-switch button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
@@ -71,6 +75,12 @@
     .small-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 19px; }
     .small-fields .field { margin: 0; }
     .help-text { margin: 17px 0 0; color: var(--soft); font-size: 10px; line-height: 1.5; }
+    .forecast { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; border-top: 1px solid var(--line); }
+    .forecast-item { padding: 13px 8px 2px 0; }
+    .forecast-item + .forecast-item { padding-left: 14px; border-left: 1px solid var(--line); }
+    .forecast-item span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 10px; }
+    .forecast-item strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .forecast-note { margin: 11px 0 0; color: var(--soft); font-size: 9px; }
     .estimate { padding: 27px 32px 25px; display: flex; flex-direction: column; justify-content: space-between; }
     .estimate-top { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
     .result-head { color: var(--muted); font-size: 12px; font-weight: 500; }
@@ -203,6 +213,12 @@
             <button type="button" data-unit="mi" aria-pressed="false">mi</button>
           </div>
         </div>
+        <div class="samples" aria-label="Load a sample trip">
+          <span class="samples-label">Try a sample</span>
+          <button class="sample-button" type="button" data-sample="quick">Quick trip</button>
+          <button class="sample-button" type="button" data-sample="day">Day trip</button>
+          <button class="sample-button" type="button" data-sample="long">Long drive</button>
+        </div>
         <div class="field">
           <label class="field-label" for="distance"><span>Distance</span><small>to your destination</small></label>
           <div class="input-shell"><input id="distance" type="number" min="0.1" step="0.1" value="120" inputmode="decimal" /><span class="input-unit distance-unit">km</span></div>
@@ -248,7 +264,12 @@
             <button class="reset-button" id="reset-button" type="button">Reset example</button>
             <span class="action-status" id="action-status" role="status" aria-live="polite"></span>
           </div>
-          <p class="help-text" id="weekly-summary">At 1 similar trip a week, that adds up to 18 minutes saved.</p>
+          <div class="forecast" aria-label="Estimated time saved across repeated trips">
+            <div class="forecast-item"><span>Per week</span><strong id="weekly-time">18 min</strong></div>
+            <div class="forecast-item"><span>Monthly average</span><strong id="monthly-time">1h 18m</strong></div>
+            <div class="forecast-item"><span>Per year</span><strong id="yearly-time">15h 36m</strong></div>
+          </div>
+          <p class="forecast-note" id="forecast-note">Assumes the same trip frequency for 52 weeks.</p>
         </div>
       </div>
     </section>
@@ -416,7 +437,11 @@
         setText('saving-summary', valid ? `${Math.round(savedPercent)}% less time on the road` : 'Enter a distance and a speed above zero to compare.');
         setText('stat-minutes', valid ? `${savedRounded} min` : '—');
         setText('stat-percent', valid ? `${Math.round(savedPercent)}%` : '—');
-        setText('weekly-summary', valid ? `At ${trips} similar ${trips === 1 ? 'trip' : 'trips'} a week, that adds up to ${duration(savedMinutes * trips)} saved.` : 'Add a valid trip to see a weekly estimate.');
+        const weeklySaved = valid ? savedMinutes * trips : NaN;
+        setText('weekly-time', valid ? duration(weeklySaved) : '—');
+        setText('monthly-time', valid ? duration(weeklySaved * 52 / 12) : '—');
+        setText('yearly-time', valid ? duration(weeklySaved * 52) : '—');
+        setText('forecast-note', valid ? `Based on ${trips} similar ${trips === 1 ? 'trip' : 'trips'} each week, repeated for 52 weeks.` : 'Enter a valid trip to see longer-term estimates.');
         setText('route-difference', valid ? `${duration(savedMinutes)} earlier` : 'Add trip details');
 
         const baseArrival = toLocalTime(fields.departure.value, baseMinutes);
@@ -467,6 +492,20 @@
       fields.increase.addEventListener('input', () => { fields.range.value = String(Math.min(Number(fields.increase.value) || 0, Number(fields.range.max))); });
       fields.range.addEventListener('input', () => { fields.increase.value = fields.range.value; render(); });
       document.querySelectorAll('.unit-switch button').forEach((button) => button.addEventListener('click', () => setUnit(button.dataset.unit)));
+      const samples = {
+        quick: { distance: 24, speed: 40, increase: 10 },
+        day: { distance: 120, speed: 80, increase: 20 },
+        long: { distance: 360, speed: 100, increase: 20 }
+      };
+      document.querySelectorAll('[data-sample]').forEach((button) => button.addEventListener('click', () => {
+        const sample = samples[button.dataset.sample];
+        const factor = unit === 'mi' ? kmToMi : 1;
+        fields.distance.value = String(Math.round(sample.distance * factor * 10) / 10);
+        fields.speed.value = String(Math.round(sample.speed * factor * 10) / 10);
+        fields.increase.value = String(Math.round(sample.increase * factor * 10) / 10);
+        byId('action-status').textContent = `${button.textContent} loaded.`;
+        render();
+      }));
       byId('reset-button').addEventListener('click', () => {
         unit = 'km';
         fields.distance.value = '120'; fields.speed.value = '80'; fields.increase.value = '20';

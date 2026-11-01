@@ -71,6 +71,8 @@ Trip inputs are held in page memory while the page is open. The calculator does 
 | --- | --- |
 | `index.html` | Page structure, neo-brutalist design system, calculator logic, arrival estimates, route timeline, and SVG chart. |
 | `favicon.svg` | Small Speedwise mark using the same black-and-green visual identity. |
+| `assets/fonts/space-grotesk-latin.woff2` | Locally served variable font for interface text and the wordmark; the display headline retains its condensed display face. |
+| `assets/fonts/OFL.txt` | SIL Open Font License for the bundled Space Grotesk font. |
 | `README.md` | Product behavior, calculation model, architecture, and development notes. |
 | `package.json` | Project metadata, validation and local-server commands, and Vercel analytics package declarations. |
 | `scripts/check-inline-js.mjs` | Lightweight check that inline JavaScript parses and required interface hooks exist. |
@@ -81,7 +83,7 @@ There is no frontend framework or build step. CSS, HTML, and browser JavaScript 
 
 The current interface uses a warm paper background (`#f4f1e7`), near-black ink (`#10110d`), and the Speedwise green accent (`#b8f36b`). Thick black rules, square controls, large type, and hard offset shadows draw from the supplied neo-brutalist references. Green marks the faster scenario and key result areas; it is not used as a decorative background everywhere.
 
-The page uses a system sans-serif stack and native form elements. It does not download a font or illustration from a third-party host. Motion is limited to short updates in the route visualization and respects `prefers-reduced-motion`.
+Space Grotesk is bundled as a variable WOFF2 for the wordmark and interface text, with its SIL Open Font License included in `assets/fonts/OFL.txt`. The condensed display face remains reserved for the main headline. Fonts are served locally rather than fetched from a third-party host. Motion is limited to short updates in the route visualization and respects `prefers-reduced-motion`.
 
 ## Run locally
 
